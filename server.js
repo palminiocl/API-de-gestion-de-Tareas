@@ -53,7 +53,6 @@ app.delete('/tasks/:id', async (req, res) => {
   await tarea.destroy();
   tarea.status = 'eliminada'; // Cambiar el estado a 'eliminada'
   res.json(tarea);
-  res.status(204).send();
 });
 
 app.listen(PORT, () => {
