@@ -58,6 +58,7 @@
           <small>Creado: ${new Date(t.fechaCreacion).toLocaleString()}</small><br/>
           <small>Actualizado: ${new Date(t.fechaActualizacion).toLocaleString()}</small><br/>
           <button onclick="deleteTask(${t.id})">Eliminar</button>
+          <button onclick="editTask(${t.id})">Editar</button>
         `;
         taskList.appendChild(div);
       });
@@ -67,7 +68,19 @@
       await fetch(`/tasks/${id}`, { method: 'DELETE' });
       loadTasks();
     }
+    async function editTask(id) {
+      const titulo = prompt('Nuevo título:');
+      const descripcion = prompt('Nueva descripción:');
 
+      if ((titulo !== null && titulo.trim() !== '') || (descripcion !== null && descripcion.trim() !== '')) {
+        await fetch(`/tasks/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ titulo, descripcion })
+        });
+        loadTasks();
+      }
+    }
     loadTasks();
   </script>
 </body>
