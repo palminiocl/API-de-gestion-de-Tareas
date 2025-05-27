@@ -1,11 +1,15 @@
 import express from 'express';
 import sequelize from './sequelize.js';
 import Tarea from './models/Tarea.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const PORT = 3000;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Sincronizar base de datos
 await sequelize.sync({ alter: true });
