@@ -4,7 +4,7 @@
   "description": "Prueba Técnica: API de Gestión de Tareas (Node.js &amp; Express)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "dev": "nodemon server.js"
   },
   "repository": {
@@ -28,6 +28,8 @@
     "ws": "^8.18.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.1"
   }
 }
