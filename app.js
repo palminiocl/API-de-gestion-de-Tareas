@@ -23,6 +23,7 @@ app.post('/tasks', async (req, res) => {
       await broadcastTasks(); // Emitir el cambio a todos los clientes
       res.status(201).json(tarea);
     } catch (error) {
+      console.error('❌ Error al crear tarea:', error); // 🔍 NECESARIO
       res.status(400).json({ error: error.message });
     }
   });
@@ -65,7 +66,9 @@ app.post('/tasks', async (req, res) => {
 
 const broadcastTasks = async () => {
     const tareas = await Tarea.findAll();
-    io.emit('tasksUpdated', tareas);
+    if (io) {
+      io.emit('tasksUpdated', tareas);
+    }
 };
   
 export default app;

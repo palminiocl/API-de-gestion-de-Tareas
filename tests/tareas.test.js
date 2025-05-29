@@ -16,7 +16,7 @@ describe('API de Tareas', () => {
     test('Crea tarea', async () => {
         const res = await request(app).post('/tasks').send({
             titulo: 'Tarea de prueba',
-            description: 'Descripción de la tarea de prueba',
+            descripcion: 'Descripción de la tarea de prueba',
         });
         expect(res.statusCode).toBe(201);
         expect(res.body).toHaveProperty('id');
