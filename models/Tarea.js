@@ -9,7 +9,10 @@ const Tarea = sequelize.define('Tarea', {
   },
   titulo: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   descripcion: {
     type: DataTypes.STRING(500),
