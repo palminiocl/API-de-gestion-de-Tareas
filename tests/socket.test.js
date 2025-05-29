@@ -8,48 +8,59 @@ import request from 'supertest';
 let ioServer, httpServer, clientSocket;
 
 beforeAll(async () => {
-  // Iniciar base de datos limpia
-  await sequelize.sync({ force: true });
+    // Initialize a clean database
+    await sequelize.sync({ force: true });
 
-  // Crear servidor HTTP + WebSocket
-  httpServer = createServer(app);
-  ioServer = new Server(httpServer);
+    // Create HTTP + WebSocket server
+    httpServer = createServer(app);
+    ioServer = new Server(httpServer);
 
-  // Inyectar socket en la app
-  setSocketIO(ioServer);
+    // Inject socket into the app
+    setSocketIO(ioServer);
 
-  await new Promise(resolve => httpServer.listen(3000, resolve));
+    // Start the server and wait for it to listen on port 3000
+    await new Promise(resolve => httpServer.listen(3000, resolve));
 
-  // Conectar cliente
-  clientSocket = new Client('http://localhost:3000');
+    // Connect the client to the WebSocket server
+    clientSocket = new Client('http://localhost:3000');
 
-  await new Promise(resolve => clientSocket.on('connect', resolve));
+    // Wait for the client to successfully connect
+    await new Promise(resolve => clientSocket.on('connect', resolve));
 });
 
 afterAll(async () => {
-  clientSocket.disconnect();
-  ioServer.close();
-  await sequelize.close();
+    // Disconnect the client socket
+    clientSocket.disconnect();
+
+    // Close the WebSocket server
+    ioServer.close();
+
+    // Close the database connection
+    await sequelize.close();
 });
 
 describe('WebSocket API', () => {
-  test('emite evento "tasksUpdated" al crear una tarea', async () => {
-    const taskPromise = new Promise(resolve => {
-      clientSocket.once('tasksUpdated', (tareas) => {
-        resolve(tareas);
-      });
+    test('emits "tasksUpdated" event when a task is created', async () => {
+        // Create a promise to capture the "tasksUpdated" event
+        const taskPromise = new Promise(resolve => {
+            clientSocket.once('tasksUpdated', (tareas) => {
+                resolve(tareas);
+            });
+        });
+
+        // Send a POST request to create a new task
+        await request(app).post('/tasks').send({
+            titulo: 'Tarea WebSocket',
+            descripcion: 'Emitida por WS',
+            status: 'pendiente'
+        });
+
+        // Wait for the "tasksUpdated" event and retrieve the tasks
+        const tareas = await taskPromise;
+
+        // Validate the received tasks
+        expect(Array.isArray(tareas)).toBe(true);
+        expect(tareas.length).toBe(1);
+        expect(tareas[0].titulo).toBe('Tarea WebSocket');
     });
-
-    await request(app).post('/tasks').send({
-      titulo: 'Tarea WebSocket',
-      descripcion: 'Emitida por WS',
-      status: 'pendiente'
-    });
-
-    const tareas = await taskPromise;
-
-    expect(Array.isArray(tareas)).toBe(true);
-    expect(tareas.length).toBe(1);
-    expect(tareas[0].titulo).toBe('Tarea WebSocket');
-  });
 });

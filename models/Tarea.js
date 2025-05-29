@@ -36,7 +36,7 @@ const Tarea = sequelize.define('Tarea', {
   timestamps: false
 });
 
-// Middleware para actualizar fechaActualizacion automáticamente
+// Middleware to automatically update fechaActualizacion
 Tarea.beforeUpdate((tarea, options) => {
   tarea.fechaActualizacion = new Date();
 });
