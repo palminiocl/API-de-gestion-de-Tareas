@@ -1,6 +1,7 @@
 import request from 'supertest';
 import app from '../app.js';
-import sequelize from '../sequelize.js';
+import { Sequelize } from 'sequelize';
+const sequelize = new Sequelize('sqlite::memory:');
 
 // Before all tests, reset the database
 beforeAll(async () => {

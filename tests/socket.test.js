@@ -2,8 +2,9 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { io as Client } from 'socket.io-client';
 import app, { setSocketIO } from '../app.js';
-import sequelize from '../sequelize.js';
 import request from 'supertest';
+import { Sequelize } from 'sequelize';
+const sequelize = new Sequelize('sqlite::memory:');
 
 let ioServer, httpServer, clientSocket;
 
