@@ -51,6 +51,7 @@ You can run the API in development mode with:
 ```bash
 npm run dev
 ```
+The website will be available at `http://localhost:3000`
 
 ---
 
@@ -60,7 +61,7 @@ npm run dev
 .
 ├── models/
 │   └── Task.js            # Sequelize model
-├── public/                # Static files (if used)
+├── public/                # Static files (HTML, CSS, JS)
 ├── tests/
 │   └── *.test.js          # Jest test cases
 ├── app.js                 # Main API
